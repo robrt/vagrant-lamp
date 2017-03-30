@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 # Use single quotes instead of double quotes to make it work with special-character passwords
-PASSWORD='12345678'
-PROJECTFOLDER='myproject'
+PASSWORD='root'
+PROJECTFOLDER='app'
 
 # create project folder
-sudo mkdir "/var/www/html/${PROJECTFOLDER}"
+sudo mkdir "/var/www/${PROJECTFOLDER}"
 
 # update / upgrade
 sudo apt-get update
@@ -14,6 +14,14 @@ sudo apt-get -y upgrade
 # install apache 2.5 and php 5.5
 sudo apt-get install -y apache2
 sudo apt-get install -y php5
+
+# install node.js and NPM
+sudo apt-get install python-software-properties
+curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+sudo apt-get install nodejs
+
+# install grunt using NPM
+sudo npm install -g grunt
 
 # install mysql and give password to installer
 sudo debconf-set-selections <<< "mysql-server mysql-server/root_password password $PASSWORD"
@@ -33,8 +41,8 @@ sudo apt-get -y install phpmyadmin
 # setup hosts file
 VHOST=$(cat <<EOF
 <VirtualHost *:80>
-    DocumentRoot "/var/www/html/${PROJECTFOLDER}"
-    <Directory "/var/www/html/${PROJECTFOLDER}">
+    DocumentRoot "/var/www/${PROJECTFOLDER}"
+    <Directory "/var/www/${PROJECTFOLDER}">
         AllowOverride All
         Require all granted
     </Directory>
